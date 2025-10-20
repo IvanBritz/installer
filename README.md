@@ -96,3 +96,27 @@ def main():
                 if event.key == K_d: keys["right"] = False
                 if event.key == K_w: keys["rot_up"] = False
                 if event.key == K_s: keys["rot_down"] = False
+                if event.key == K_q: keys["rot_left"] = False
+                if event.key == K_e: keys["rot_right"] = False
+                if event.key == K_z: keys["scale_in"] = False
+                if event.key == K_x: keys["scale_out"] = False
+
+        # Apply transformations
+        if keys["left"]: glTranslatef(-0.05, 0, 0)
+        if keys["right"]: glTranslatef(0.05, 0, 0)
+        if keys["rot_up"]: glRotatef(2, 1, 0, 0)
+        if keys["rot_down"]: glRotatef(-2, 1, 0, 0)
+        if keys["rot_left"]: glRotatef(2, 0, 1, 0)
+        if keys["rot_right"]: glRotatef(-2, 0, 1, 0)
+        if keys["scale_in"]: glScalef(0.99, 0.99, 0.99)
+        if keys["scale_out"]: glScalef(1.01, 1.01, 1.01)
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        draw_object()
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
