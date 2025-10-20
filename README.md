@@ -5,8 +5,10 @@ from OpenGL.GLU import *
 
 # Cube vertices
 vertices = [
-    [1, 1, 1], [1, 1, -1], [1, -1, -1], [1, -1, 1],
-    [-1, 1, 1], [-1, -1, -1], [-1, -1, 1], [-1, 1, -1]
+    [1, 1, 1], [1, 1, -1],
+    [1, -1, -1], [1, -1, 1],
+    [-1, 1, 1], [-1, -1, -1],
+    [-1, -1, 1], [-1, 1, -1]
 ]
 
 # Triangles (12 total)
@@ -27,34 +29,31 @@ def draw_cube():
     glEnd()
 
 def draw_object():
-    # Cube 1 - Center (Base)
+    # Innermost cube - bright green
     glPushMatrix()
-    glColor3f(1, 0, 0)  # Red
-    glScalef(1.2, 1.2, 1.2)
+    glColor3f(0.0, 1.0, 0.0)
+    glScalef(0.5, 0.5, 0.5)
     draw_cube()
     glPopMatrix()
 
-    # Cube 2 - Top
+    # 2nd cube - medium green
     glPushMatrix()
-    glColor3f(0, 1, 0)  # Green
-    glTranslatef(0, 3, 0)
-    glScalef(0.6, 0.6, 0.6)
-    draw_cube()
-    glPopMatrix()
-
-    # Cube 3 - Left
-    glPushMatrix()
-    glColor3f(0, 0, 1)  # Blue
-    glTranslatef(-3, -2, 0)
+    glColor3f(0.0, 0.8, 0.0)
     glScalef(0.8, 0.8, 0.8)
     draw_cube()
     glPopMatrix()
 
-    # Cube 4 - Right
+    # 3rd cube - darker green
     glPushMatrix()
-    glColor3f(1, 1, 0)  # Yellow
-    glTranslatef(3, -2, 0)
-    glScalef(0.8, 0.8, 0.8)
+    glColor3f(0.0, 0.6, 0.0)
+    glScalef(1.1, 1.1, 1.1)
+    draw_cube()
+    glPopMatrix()
+
+    # Outermost cube - darkest green
+    glPushMatrix()
+    glColor3f(0.0, 0.4, 0.0)
+    glScalef(1.4, 1.4, 1.4)
     draw_cube()
     glPopMatrix()
 
@@ -66,53 +65,27 @@ def main():
 
     glEnable(GL_DEPTH_TEST)
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
-    glTranslatef(0.0, 0.0, -15)
+    glTranslatef(0.0, 0.0, -10)
 
     clock = pygame.time.Clock()
+    angle = 0
+
     running = True
-
-    keys = {
-        "left": False, "right": False,
-        "rot_up": False, "rot_down": False,
-        "rot_left": False, "rot_right": False,
-        "scale_in": False, "scale_out": False
-    }
-
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-            if event.type == KEYDOWN:
-                if event.key == K_a: keys["left"] = True
-                if event.key == K_d: keys["right"] = True
-                if event.key == K_w: keys["rot_up"] = True
-                if event.key == K_s: keys["rot_down"] = True
-                if event.key == K_q: keys["rot_left"] = True
-                if event.key == K_e: keys["rot_right"] = True
-                if event.key == K_z: keys["scale_in"] = True
-                if event.key == K_x: keys["scale_out"] = True
-            if event.type == KEYUP:
-                if event.key == K_a: keys["left"] = False
-                if event.key == K_d: keys["right"] = False
-                if event.key == K_w: keys["rot_up"] = False
-                if event.key == K_s: keys["rot_down"] = False
-                if event.key == K_q: keys["rot_left"] = False
-                if event.key == K_e: keys["rot_right"] = False
-                if event.key == K_z: keys["scale_in"] = False
-                if event.key == K_x: keys["scale_out"] = False
-
-        # Apply transformations
-        if keys["left"]: glTranslatef(-0.05, 0, 0)
-        if keys["right"]: glTranslatef(0.05, 0, 0)
-        if keys["rot_up"]: glRotatef(2, 1, 0, 0)
-        if keys["rot_down"]: glRotatef(-2, 1, 0, 0)
-        if keys["rot_left"]: glRotatef(2, 0, 1, 0)
-        if keys["rot_right"]: glRotatef(-2, 0, 1, 0)
-        if keys["scale_in"]: glScalef(0.99, 0.99, 0.99)
-        if keys["scale_out"]: glScalef(1.01, 1.01, 1.01)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glPushMatrix()
+
+        # Continuous rotation for animation
+        angle += 1
+        glRotatef(angle, 1, 1, 0)
+
         draw_object()
+        glPopMatrix()
+
         pygame.display.flip()
         clock.tick(60)
 
