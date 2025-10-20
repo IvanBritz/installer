@@ -29,31 +29,38 @@ def draw_cube():
     glEnd()
 
 def draw_object():
-    # Innermost cube - bright green
+    # Outermost cube (darkest)
     glPushMatrix()
-    glColor3f(0.0, 1.0, 0.0)
-    glScalef(0.5, 0.5, 0.5)
+    glColor3f(0.0, 0.3, 0.0)
+    glScalef(2.0, 2.0, 2.0)
     draw_cube()
     glPopMatrix()
 
-    # 2nd cube - medium green
+    # Second cube
     glPushMatrix()
-    glColor3f(0.0, 0.8, 0.0)
+    glColor3f(0.0, 0.45, 0.0)
+    glScalef(1.6, 1.6, 1.6)
+    draw_cube()
+    glPopMatrix()
+
+    # Third cube
+    glPushMatrix()
+    glColor3f(0.0, 0.6, 0.0)
+    glScalef(1.2, 1.2, 1.2)
+    draw_cube()
+    glPopMatrix()
+
+    # Fourth cube
+    glPushMatrix()
+    glColor3f(0.0, 0.75, 0.0)
     glScalef(0.8, 0.8, 0.8)
     draw_cube()
     glPopMatrix()
 
-    # 3rd cube - darker green
+    # Innermost cube (brightest)
     glPushMatrix()
-    glColor3f(0.0, 0.6, 0.0)
-    glScalef(1.1, 1.1, 1.1)
-    draw_cube()
-    glPopMatrix()
-
-    # Outermost cube - darkest green
-    glPushMatrix()
-    glColor3f(0.0, 0.4, 0.0)
-    glScalef(1.4, 1.4, 1.4)
+    glColor3f(0.0, 0.9, 0.0)
+    glScalef(0.5, 0.5, 0.5)
     draw_cube()
     glPopMatrix()
 
@@ -69,20 +76,18 @@ def main():
 
     clock = pygame.time.Clock()
     angle = 0
-
     running = True
+
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
         glPushMatrix()
-
-        # Continuous rotation for animation
         angle += 1
-        glRotatef(angle, 1, 1, 0)
-
+        glRotatef(angle, 1, 1, 0)  # Rotate diagonally
         draw_object()
         glPopMatrix()
 
