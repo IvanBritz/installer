@@ -3,81 +3,37 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-# Cube vertices
-vertices = [
-    [1, 1, 1], [1, 1, -1],
-    [1, -1, -1], [1, -1, 1],
-    [-1, 1, 1], [-1, -1, -1],
-    [-1, -1, 1], [-1, 1, -1]
-]
-
-# Cube faces (triangles)
-triangles = [
-    [0, 1, 2], [0, 2, 3],
-    [4, 6, 5], [4, 5, 7],
-    [0, 3, 6], [0, 6, 4],
-    [1, 7, 5], [1, 5, 2],
-    [0, 4, 7], [0, 7, 1],
-    [3, 2, 5], [3, 5, 6]
-]
-
-def draw_cube():
-    glBegin(GL_TRIANGLES)
-    for tri in triangles:
-        for vertex in tri:
-            glVertex3fv(vertices[vertex])
+def draw_square(size, color):
+    glColor3fv(color)
+    glBegin(GL_QUADS)
+    glVertex2f(-size, -size)
+    glVertex2f(size, -size)
+    glVertex2f(size, size)
+    glVertex2f(-size, size)
     glEnd()
 
 def draw_object():
-    # Outermost cube (darkest)
-    glPushMatrix()
-    glColor3f(0.0, 0.25, 0.0)
-    glScalef(2.0, 2.0, 2.0)
-    glTranslatef(0, 0, -0.5)
-    draw_cube()
-    glPopMatrix()
-
-    # Second cube
-    glPushMatrix()
-    glColor3f(0.0, 0.4, 0.0)
-    glScalef(1.6, 1.6, 1.6)
-    glTranslatef(0, 0, -0.3)
-    draw_cube()
-    glPopMatrix()
-
-    # Third cube
-    glPushMatrix()
-    glColor3f(0.0, 0.55, 0.0)
-    glScalef(1.2, 1.2, 1.2)
-    glTranslatef(0, 0, -0.1)
-    draw_cube()
-    glPopMatrix()
-
-    # Fourth cube
-    glPushMatrix()
-    glColor3f(0.0, 0.7, 0.0)
-    glScalef(0.8, 0.8, 0.8)
-    glTranslatef(0, 0, 0.1)
-    draw_cube()
-    glPopMatrix()
-
-    # Innermost cube (brightest)
-    glPushMatrix()
-    glColor3f(0.0, 0.9, 0.0)
-    glScalef(0.4, 0.4, 0.4)
-    glTranslatef(0, 0, 0.3)
-    draw_cube()
-    glPopMatrix()
+    # Outermost - darkest green
+    draw_square(2.0, (0.0, 0.3, 0.0))
+    # Next layer - medium dark green
+    draw_square(1.5, (0.0, 0.5, 0.0))
+    # Next layer - lighter green
+    draw_square(1.0, (0.0, 0.7, 0.0))
+    # Innermost - lightest green (midpoint)
+    draw_square(0.5, (0.0, 0.9, 0.0))
 
 def main():
     pygame.init()
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("05 Lab 1")
+    pygame.display.set_caption("05 Lab 1 - 2D Gradient Square")
 
-    glEnable(GL_DEPTH_TEST)
-    gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
-    glTranslatef(0.0, 0.0, -10)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluOrtho2D(-3, 3, -3, 3)  # 2D orthographic view
+
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
 
     clock = pygame.time.Clock()
     angle = 0
@@ -88,13 +44,13 @@ def main():
             if event.type == QUIT:
                 running = False
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT)
 
-        glPushMatrix()
-        angle += 1
-        glRotatef(angle, 1, 1, 0)
+        glLoadIdentity()
+        glRotatef(angle, 0, 0, 1)  # rotate in 2D plane
+        angle += 0.5  # slow rotation
+
         draw_object()
-        glPopMatrix()
 
         pygame.display.flip()
         clock.tick(60)
