@@ -5,80 +5,69 @@ from OpenGL.GLU import *
 
 # Cube vertices
 vertices = [
-    [1, 1, 1], [1, 1, -1],
-    [1, -1, -1], [1, -1, 1],
-    [-1, 1, 1], [-1, -1, -1],
-    [-1, -1, 1], [-1, 1, -1]
+    [1, 1, -1],
+    [1, -1, -1],
+    [-1, -1, -1],
+    [-1, 1, -1],
+    [1, 1, 1],
+    [1, -1, 1],
+    [-1, -1, 1],
+    [-1, 1, 1]
 ]
 
-# Triangles (12 total)
-triangles = [
-    [0, 1, 2], [0, 2, 3],
-    [4, 6, 5], [4, 5, 7],
-    [0, 3, 6], [0, 6, 4],
-    [1, 7, 5], [1, 5, 2],
-    [0, 4, 7], [0, 7, 1],
-    [3, 2, 5], [3, 5, 6]
+# Cube edges (optional)
+edges = (
+    (0,1), (1,2), (2,3), (3,0),
+    (4,5), (5,6), (6,7), (7,4),
+    (0,4), (1,5), (2,6), (3,7)
+)
+
+# Each cube face has 4 vertices
+faces = (
+    (0,1,2,3),  # Back
+    (4,5,6,7),  # Front
+    (0,1,5,4),  # Right
+    (2,3,7,6),  # Left
+    (1,2,6,5),  # Bottom
+    (0,3,7,4)   # Top
+)
+
+# 4 primary colors (repeated across faces)
+colors = [
+    (1, 0, 0),  # Red
+    (0, 1, 0),  # Green
+    (0, 0, 1),  # Blue
+    (1, 1, 0)   # Yellow
 ]
 
-def draw_cube():
-    glBegin(GL_TRIANGLES)
-    for tri in triangles:
-        for vertex in tri:
+def draw_colored_cube():
+    glBegin(GL_QUADS)
+    for i, face in enumerate(faces):
+        glColor3fv(colors[i % 4])
+        for vertex in face:
             glVertex3fv(vertices[vertex])
     glEnd()
 
 def draw_object():
-    # Cube 1 - Center (Red)
-    glPushMatrix()
-    glColor3f(1, 0, 0)
-    glScalef(1.2, 1.2, 1.2)
-    draw_cube()
-    glPopMatrix()
-
-    # Cube 2 - Top (Green)
-    glPushMatrix()
-    glColor3f(0, 1, 0)
-    glTranslatef(0, 3, 0)
-    glScalef(0.6, 0.6, 0.6)
-    draw_cube()
-    glPopMatrix()
-
-    # Cube 3 - Left (Blue)
-    glPushMatrix()
-    glColor3f(0, 0, 1)
-    glTranslatef(-3, -2, 0)
-    glScalef(0.8, 0.8, 0.8)
-    draw_cube()
-    glPopMatrix()
-
-    # Cube 4 - Right (Yellow)
-    glPushMatrix()
-    glColor3f(1, 1, 0)
-    glTranslatef(3, -2, 0)
-    glScalef(0.8, 0.8, 0.8)
-    draw_cube()
-    glPopMatrix()
+    # Single 3D cube
+    draw_colored_cube()
 
 def main():
     pygame.init()
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("05 Lab 1 - Movement Enabled")
+    pygame.display.set_caption("05 Lab 1 - 3D Movement & 4 Colors")
 
     glEnable(GL_DEPTH_TEST)
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
-    glTranslatef(0.0, 0.0, -15)
+    glTranslatef(0.0, 0.0, -7)
 
     clock = pygame.time.Clock()
     running = True
 
-    # Movement and rotation variables
-    x_move = 0
-    y_move = 0
-    z_move = 0
-    x_rot = 0
-    y_rot = 0
+    # Movement, rotation, scale
+    x_move, y_move, z_move = 0, 0, 0
+    x_rot, y_rot = 0, 0
     scale = 1.0
 
     while running:
@@ -88,31 +77,23 @@ def main():
 
         keys = pygame.key.get_pressed()
 
-        # Movement controls
-        if keys[K_a]:
-            x_move -= 0.05
-        if keys[K_d]:
-            x_move += 0.05
-        if keys[K_w]:
-            y_move += 0.05
-        if keys[K_s]:
-            y_move -= 0.05
+        # Translation (move)
+        if keys[K_a]: x_move -= 0.1  # Left
+        if keys[K_d]: x_move += 0.1  # Right
+        if keys[K_w]: y_move += 0.1  # Up
+        if keys[K_s]: y_move -= 0.1  # Down
+        if keys[K_z]: z_move += 0.1  # Forward (closer)
+        if keys[K_x]: z_move -= 0.1  # Backward (away)
 
-        # Rotation controls
-        if keys[K_q]:
-            y_rot += 2
-        if keys[K_e]:
-            y_rot -= 2
-        if keys[K_r]:
-            x_rot += 2
-        if keys[K_f]:
-            x_rot -= 2
+        # Rotation
+        if keys[K_q]: y_rot -= 2     # Rotate left
+        if keys[K_e]: y_rot += 2     # Rotate right
+        if keys[K_r]: x_rot -= 2     # Rotate up
+        if keys[K_f]: x_rot += 2     # Rotate down
 
-        # Scaling
-        if keys[K_z]:
-            scale *= 0.99
-        if keys[K_x]:
-            scale *= 1.01
+        # Scale
+        if keys[K_UP]: scale *= 1.01
+        if keys[K_DOWN]: scale *= 0.99
 
         # Reset
         if keys[K_SPACE]:
@@ -120,18 +101,17 @@ def main():
             x_rot = y_rot = 0
             scale = 1.0
 
+        # Render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
         glPushMatrix()
 
-        # Apply transformations
+        # Apply all transformations
         glTranslatef(x_move, y_move, z_move)
         glScalef(scale, scale, scale)
         glRotatef(x_rot, 1, 0, 0)
         glRotatef(y_rot, 0, 1, 0)
 
         draw_object()
-
         glPopMatrix()
 
         pygame.display.flip()
