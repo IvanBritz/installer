@@ -29,38 +29,38 @@ def draw_cube():
     glEnd()
 
 def draw_object():
-    # Outermost cube (darkest)
+    # Outermost (darkest green)
     glPushMatrix()
-    glColor3f(0.0, 0.3, 0.0)
+    glColor3f(0.0, 0.25, 0.0)
     glScalef(2.0, 2.0, 2.0)
     draw_cube()
     glPopMatrix()
 
     # Second cube
     glPushMatrix()
-    glColor3f(0.0, 0.45, 0.0)
+    glColor3f(0.0, 0.4, 0.0)
     glScalef(1.6, 1.6, 1.6)
     draw_cube()
     glPopMatrix()
 
     # Third cube
     glPushMatrix()
-    glColor3f(0.0, 0.6, 0.0)
+    glColor3f(0.0, 0.55, 0.0)
     glScalef(1.2, 1.2, 1.2)
     draw_cube()
     glPopMatrix()
 
     # Fourth cube
     glPushMatrix()
-    glColor3f(0.0, 0.75, 0.0)
+    glColor3f(0.0, 0.7, 0.0)
     glScalef(0.8, 0.8, 0.8)
     draw_cube()
     glPopMatrix()
 
-    # Innermost cube (brightest)
+    # Innermost (brightest green)
     glPushMatrix()
     glColor3f(0.0, 0.9, 0.0)
-    glScalef(0.5, 0.5, 0.5)
+    glScalef(0.4, 0.4, 0.4)
     draw_cube()
     glPopMatrix()
 
@@ -87,7 +87,7 @@ def main():
 
         glPushMatrix()
         angle += 1
-        glRotatef(angle, 1, 1, 0)  # Rotate diagonally
+        glRotatef(angle, 1, 1, 0)  # Smooth diagonal rotation
         draw_object()
         glPopMatrix()
 
