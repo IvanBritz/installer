@@ -3,7 +3,6 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-# Cube vertices
 vertices = [
     [1, 1, 1], [1, 1, -1],
     [1, -1, -1], [1, -1, 1],
@@ -11,7 +10,6 @@ vertices = [
     [-1, -1, 1], [-1, 1, -1]
 ]
 
-# Triangles (12 total)
 triangles = [
     [0, 1, 2], [0, 2, 3],
     [4, 6, 5], [4, 5, 7],
@@ -29,38 +27,43 @@ def draw_cube():
     glEnd()
 
 def draw_object():
-    # Outermost (darkest green)
+    # Outermost cube (darkest)
     glPushMatrix()
     glColor3f(0.0, 0.25, 0.0)
     glScalef(2.0, 2.0, 2.0)
+    glTranslatef(0, 0, -0.5)
     draw_cube()
     glPopMatrix()
 
-    # Second cube
+    # 2nd cube
     glPushMatrix()
     glColor3f(0.0, 0.4, 0.0)
     glScalef(1.6, 1.6, 1.6)
+    glTranslatef(0, 0, -0.4)
     draw_cube()
     glPopMatrix()
 
-    # Third cube
+    # 3rd cube
     glPushMatrix()
     glColor3f(0.0, 0.55, 0.0)
     glScalef(1.2, 1.2, 1.2)
+    glTranslatef(0, 0, -0.3)
     draw_cube()
     glPopMatrix()
 
-    # Fourth cube
+    # 4th cube
     glPushMatrix()
     glColor3f(0.0, 0.7, 0.0)
     glScalef(0.8, 0.8, 0.8)
+    glTranslatef(0, 0, -0.2)
     draw_cube()
     glPopMatrix()
 
-    # Innermost (brightest green)
+    # Innermost cube (brightest)
     glPushMatrix()
     glColor3f(0.0, 0.9, 0.0)
     glScalef(0.4, 0.4, 0.4)
+    glTranslatef(0, 0, 0.0)
     draw_cube()
     glPopMatrix()
 
@@ -84,10 +87,9 @@ def main():
                 running = False
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
         glPushMatrix()
         angle += 1
-        glRotatef(angle, 1, 1, 0)  # Smooth diagonal rotation
+        glRotatef(angle, 1, 1, 0)  # diagonal rotation
         draw_object()
         glPopMatrix()
 
