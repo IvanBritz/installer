@@ -27,35 +27,34 @@ def draw_cube():
     glEnd()
 
 def draw_object():
-    # Cube 1
+    # Cube 1 - Center (Base)
     glPushMatrix()
     glColor3f(1, 0, 0)  # Red
-    glTranslatef(-3, 0, 0)
-    glScalef(0.5, 0.5, 0.5)
+    glScalef(1.2, 1.2, 1.2)
     draw_cube()
     glPopMatrix()
 
-    # Cube 2
+    # Cube 2 - Top
     glPushMatrix()
     glColor3f(0, 1, 0)  # Green
-    glTranslatef(3, 0, 0)
-    glScalef(0.75, 0.75, 0.75)
-    draw_cube()
-    glPopMatrix()
-
-    # Cube 3
-    glPushMatrix()
-    glColor3f(0, 0, 1)  # Blue
     glTranslatef(0, 3, 0)
     glScalef(0.6, 0.6, 0.6)
     draw_cube()
     glPopMatrix()
 
-    # Cube 4
+    # Cube 3 - Left
+    glPushMatrix()
+    glColor3f(0, 0, 1)  # Blue
+    glTranslatef(-3, -2, 0)
+    glScalef(0.8, 0.8, 0.8)
+    draw_cube()
+    glPopMatrix()
+
+    # Cube 4 - Right
     glPushMatrix()
     glColor3f(1, 1, 0)  # Yellow
-    glTranslatef(0, -3, 0)
-    glScalef(1.2, 1.2, 1.2)
+    glTranslatef(3, -2, 0)
+    glScalef(0.8, 0.8, 0.8)
     draw_cube()
     glPopMatrix()
 
@@ -72,7 +71,6 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
-    # Keyboard controls
     keys = {
         "left": False, "right": False,
         "rot_up": False, "rot_down": False,
@@ -98,27 +96,3 @@ def main():
                 if event.key == K_d: keys["right"] = False
                 if event.key == K_w: keys["rot_up"] = False
                 if event.key == K_s: keys["rot_down"] = False
-                if event.key == K_q: keys["rot_left"] = False
-                if event.key == K_e: keys["rot_right"] = False
-                if event.key == K_z: keys["scale_in"] = False
-                if event.key == K_x: keys["scale_out"] = False
-
-        # Transformations
-        if keys["left"]: glTranslatef(-0.05, 0, 0)
-        if keys["right"]: glTranslatef(0.05, 0, 0)
-        if keys["rot_up"]: glRotatef(2, 1, 0, 0)
-        if keys["rot_down"]: glRotatef(-2, 1, 0, 0)
-        if keys["rot_left"]: glRotatef(2, 0, 1, 0)
-        if keys["rot_right"]: glRotatef(-2, 0, 1, 0)
-        if keys["scale_in"]: glScalef(0.99, 0.99, 0.99)
-        if keys["scale_out"]: glScalef(1.01, 1.01, 1.01)
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        draw_object()  # ✅ Replaces draw_cube()
-        pygame.display.flip()
-        clock.tick(60)
-
-    pygame.quit()
-
-if __name__ == "__main__":
-    main()
