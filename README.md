@@ -11,7 +11,7 @@ vertices = [
     [-1, -1, 1], [-1, 1, -1]
 ]
 
-# Triangles (12 total)
+# Cube faces (triangles)
 triangles = [
     [0, 1, 2], [0, 2, 3],
     [4, 6, 5], [4, 5, 7],
@@ -21,52 +21,52 @@ triangles = [
     [3, 2, 5], [3, 5, 6]
 ]
 
-# Function to draw a cube with vertex gradients
-def draw_gradient_cube(base_brightness):
+def draw_cube():
     glBegin(GL_TRIANGLES)
     for tri in triangles:
         for vertex in tri:
-            # Assign gradient colors based on vertex position
-            x, y, z = vertices[vertex]
-            brightness = base_brightness * (0.7 + (x + y + z) / 6.0)
-            glColor3f(0.0, max(0.0, min(1.0, brightness)), 0.0)
             glVertex3fv(vertices[vertex])
     glEnd()
 
 def draw_object():
     # Outermost cube (darkest)
     glPushMatrix()
+    glColor3f(0.0, 0.25, 0.0)
     glScalef(2.0, 2.0, 2.0)
     glTranslatef(0, 0, -0.5)
-    draw_gradient_cube(0.3)
+    draw_cube()
     glPopMatrix()
 
-    # 2nd cube
+    # Second cube
     glPushMatrix()
+    glColor3f(0.0, 0.4, 0.0)
     glScalef(1.6, 1.6, 1.6)
-    glTranslatef(0, 0, -0.4)
-    draw_gradient_cube(0.45)
-    glPopMatrix()
-
-    # 3rd cube
-    glPushMatrix()
-    glScalef(1.2, 1.2, 1.2)
     glTranslatef(0, 0, -0.3)
-    draw_gradient_cube(0.6)
+    draw_cube()
     glPopMatrix()
 
-    # 4th cube
+    # Third cube
     glPushMatrix()
+    glColor3f(0.0, 0.55, 0.0)
+    glScalef(1.2, 1.2, 1.2)
+    glTranslatef(0, 0, -0.1)
+    draw_cube()
+    glPopMatrix()
+
+    # Fourth cube
+    glPushMatrix()
+    glColor3f(0.0, 0.7, 0.0)
     glScalef(0.8, 0.8, 0.8)
-    glTranslatef(0, 0, -0.2)
-    draw_gradient_cube(0.75)
+    glTranslatef(0, 0, 0.1)
+    draw_cube()
     glPopMatrix()
 
     # Innermost cube (brightest)
     glPushMatrix()
+    glColor3f(0.0, 0.9, 0.0)
     glScalef(0.4, 0.4, 0.4)
-    glTranslatef(0, 0, 0.0)
-    draw_gradient_cube(0.9)
+    glTranslatef(0, 0, 0.3)
+    draw_cube()
     glPopMatrix()
 
 def main():
